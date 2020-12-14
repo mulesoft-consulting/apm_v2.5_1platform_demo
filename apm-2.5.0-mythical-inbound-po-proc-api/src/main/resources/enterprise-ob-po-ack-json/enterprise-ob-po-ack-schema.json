@@ -1,0 +1,234 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "B2BMessage": {
+      "type": "object",
+      "properties": {
+        "B2BHeader": {
+          "type": "object",
+          "properties": {
+            "MessageType": {
+              "type": "string"
+            },
+            "BusinessKey": {
+              "type": "string"
+            },
+            "CreatedDateTime": {
+              "type": "string"
+            },
+            "Sender": {
+              "type": "string"
+            },
+            "Receiver": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "MessageType",
+            "BusinessKey",
+            "CreatedDateTime",
+            "Sender",
+            "Receiver"
+          ]
+        },
+        "Data": {
+          "type": "object",
+          "properties": {
+            "NetSuitePOAck": {
+              "type": "object",
+              "properties": {
+                "POAckHeader": {
+                  "type": "object",
+                  "properties": {
+                    "CustomerId": {
+                      "type": "string"
+                    },
+                    "SenderId": {
+                      "type": "string"
+                    },
+                    "ReceiverId": {
+                      "type": "string"
+                    },
+                    "DueDate": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "CustomerId",
+                    "SenderId",
+                    "ReceiverId",
+                    "DueDate"
+                  ]
+                },
+                "Shipment": {
+                  "type": "object",
+                  "properties": {
+                    "Orders": {
+                      "type": "object",
+                      "properties": {
+                        "Order": {
+                          "type": "object",
+                          "properties": {
+                            "OrderReferences": {
+                              "type": "object",
+                              "properties": {
+                                "RefType": {
+                                  "type": "string"
+                                },
+                                "RefValue": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "RefType",
+                                "RefValue"
+                              ]
+                            },
+                            "Items": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "Item": {
+                                    "type": "object",
+                                    "properties": {
+                                      "ItemReference": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "RefType": {
+                                              "type": "string",
+                                              "enum": [
+                                                "POLineNumber",
+                                                "ItemNumber",
+                                                "ShipQuantity",
+                                                "QuantityUOM"
+                                              ]
+                                            },
+                                            "RefValue": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "RefType",
+                                            "RefValue"
+                                          ]
+                                        }
+                                      },
+                                      "Locations": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "@role": {
+                                              "type": "string",
+                                              "enum": [
+                                                "SHIP FROM",
+                                                "SHIP TO"
+                                              ]
+                                            },
+                                            "LocationId": {
+                                              "type": "string",
+                                              "enum": [
+                                                "65761T",
+                                                "00000954"
+                                              ]
+                                            },
+                                            "Address": {
+                                              "type": "object",
+                                              "properties": {
+                                                "AddressLine1": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "6700 Auto Mall Pkwy",
+                                                    "415 Mission St"
+                                                  ]
+                                                },
+                                                "City": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "Fremont",
+                                                    "SAN FRANCISCO"
+                                                  ]
+                                                },
+                                                "State": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "CA"
+                                                  ]
+                                                },
+                                                "PostalCode": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "94538",
+                                                    "94105"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "AddressLine1",
+                                                "City",
+                                                "State",
+                                                "PostalCode"
+                                              ]
+                                            }
+                                          },
+                                          "required": [
+                                            "@role",
+                                            "LocationId",
+                                            "Address"
+                                          ]
+                                        }
+                                      }
+                                    },
+                                    "required": [
+                                      "ItemReference",
+                                      "Locations"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "Item"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "OrderReferences",
+                            "Items"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "Order"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "Orders"
+                  ]
+                }
+              },
+              "required": [
+                "POAckHeader",
+                "Shipment"
+              ]
+            }
+          },
+          "required": [
+            "NetSuitePOAck"
+          ]
+        }
+      },
+      "required": [
+        "B2BHeader",
+        "Data"
+      ]
+    }
+  },
+  "required": [
+    "B2BMessage"
+  ]
+}

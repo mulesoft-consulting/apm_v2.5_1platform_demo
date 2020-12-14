@@ -1,0 +1,160 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "PurchaseOrder": {
+        "type": "object",
+        "properties": {
+          "POPurpose": {
+            "type": "string"
+          },
+          "POType": {
+            "type": "string"
+          },
+          "PONumber": {
+            "type": "string"
+          },
+          "CustomerId": {
+            "type": "string"
+          },
+          "CustomerName": {
+            "type": "string"
+          },
+          "BuyerName": {
+            "type": "string"
+          },
+          "BuyerEmailID": {
+            "type": "string"
+          },
+          "PODate": {
+            "type": "string"
+          },
+          "POLineItems": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "PurchaseOrderLineId": {
+                  "type": "string"
+                },
+                "LineNum": {
+                  "type": "string"
+                },
+                "Quantity": {
+                  "type": "string"
+                },
+                "UnitPrice": {
+                  "type": "string"
+                },
+                "ItemDescription": {
+                  "type": "string"
+                },
+                "SupplierItemNum": {
+                  "type": "string"
+                },
+                "POLineLocation": {
+                  "type": "object",
+                  "properties": {
+                    "LineLocationId": {
+                      "type": "string"
+                    },
+                    "ShipToLocation": {
+                      "type": "object",
+                      "properties": {
+                        "ShipToLocationCode": {
+                          "type": "string"
+                        },
+                        "ShipToLocationName": {
+                          "type": "string"
+                        },
+                        "Address": {
+                          "type": "object",
+                          "properties": {
+                            "AddressLine1": {
+                              "type": "string"
+                            },
+                            "AddressLine2": {
+                              "type": "string"
+                            },
+                            "City": {
+                              "type": "string",
+                              "enum": [
+                                "San Francisco",
+                                "Palo Alto"
+                              ]
+                            },
+                            "PostalCode": {
+                              "type": "string",
+                              "enum": [
+                                "94105",
+                                "94306"
+                              ]
+                            },
+                            "State": {
+                              "type": "string",
+                              "enum": [
+                                "CA"
+                              ]
+                            },
+                            "Country": {
+                              "type": "string",
+                              "enum": [
+                                "US"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "AddressLine1",
+                            "AddressLine2",
+                            "City",
+                            "PostalCode",
+                            "State",
+                            "Country"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "ShipToLocationCode",
+                        "ShipToLocationName",
+                        "Address"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "LineLocationId",
+                    "ShipToLocation"
+                  ]
+                }
+              },
+              "required": [
+                "PurchaseOrderLineId",
+                "LineNum",
+                "Quantity",
+                "UnitPrice",
+                "ItemDescription",
+                "SupplierItemNum",
+                "POLineLocation"
+              ]
+            }
+          }
+        },
+        "required": [
+          "POPurpose",
+          "POType",
+          "PONumber",
+          "CustomerId",
+          "CustomerName",
+          "BuyerName",
+          "BuyerEmailID",
+          "PODate",
+          "POLineItems"
+        ]
+      }
+    },
+    "required": [
+      "PurchaseOrder"
+    ]
+  }
+}

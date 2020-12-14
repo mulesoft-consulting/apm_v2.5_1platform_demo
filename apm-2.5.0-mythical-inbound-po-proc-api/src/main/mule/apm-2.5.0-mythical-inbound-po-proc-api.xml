@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+	<http:listener-config name="HTTP_Listener_Mythical" doc:name="HTTP Listener config" doc:id="99bbf2c7-1fb5-4484-a668-7fbe2ba43c0e" basePath="mythical" >
+		<http:listener-connection protocol="HTTPS" host="0.0.0.0" port="${https.port}" >
+			<tls:context >
+				<tls:key-store type="jks" path="muletest-rootca.jks" alias="rootca" keyPassword="muletest" password="muletest" />
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	<db:config name="Database_Config_Mythical" doc:name="Database Config" doc:id="3e0404d0-ebbc-4fd9-a87a-9f9279914827" >
+		<db:my-sql-connection host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" database="${db.instance}" />
+	</db:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="5db9f6c0-c24e-42c2-bcb6-de94fd54f089" file="app.properties" />
+	<http:request-config name="HTTP_Request_Send_to_PartnerManager" doc:name="HTTP Request configuration" doc:id="be768cfe-23be-4b27-a317-0c96ddd73711" basePath="${apm.outbound.basepath}" >
+		<http:request-connection protocol="HTTPS" host="${apm.outbound.host}" port="${apm.outbound.port}" >
+			<tls:context >
+				<tls:trust-store insecure="true" />
+			</tls:context>
+			<http:authentication >
+				<http:basic-authentication username="${apm.outbound.user}" password="${apm.outbound.password}" />
+			</http:authentication>
+		</http:request-connection>
+	</http:request-config>
+	<vm:config name="VM_Config" doc:name="VM Config" doc:id="94cfadc0-c725-4822-b232-9064c0c596cb" >
+		<vm:queues >
+			<vm:queue queueName="outbound-po-ack.q" queueType="PERSISTENT" />
+		</vm:queues>
+	</vm:config>
+	<flow name="apm-2.5.0-mythical-inbound-po-proc-apiFlow" doc:id="66bc0410-4769-47a6-ba10-233b491fae37" >
+		<http:listener doc:name="/inbound-po-proc-api" doc:id="55d16b60-d712-4f99-8aa0-ec27e7205029" config-ref="HTTP_Listener_Mythical" path="/inbound-po-proc-api"/>
+		<logger level="INFO" doc:name="Logger" doc:id="8e46dcf2-38f1-4a2c-be25-76c9b67fdb52" message="Processing inbound purchase order"/>
+		<foreach doc:name="For Each" doc:id="df6a925a-08f9-494e-8070-cf7fc8f0d2bb" collection="#[payload]">
+			<logger level="INFO" doc:name="Logger" doc:id="3dc5c03d-c1a0-4419-852a-67dc2128ee3d" message="Processing Purchase order #[payload.PurchaseOrder.PONumber] from #[payload.PurchaseOrder.CustomerName]"/>
+			<set-variable value="#[payload]" doc:name="Save current PO" doc:id="4126821d-8174-45a7-bd70-63074fc58b2f" variableName="currentPOJson"/>
+			<ee:transform doc:name="Transform Message" doc:id="0bf0d109-93f9-4835-93bc-eaab80533594" >
+				<ee:message >
+					<ee:set-payload resource="enterprise-ob-po-ack-json/Enterprise_PO_to_POAck_JSON.dwl" />
+				</ee:message>
+				<ee:variables >
+				</ee:variables>
+			</ee:transform>
+			<set-variable value="#[payload]" doc:name="Save Current PO Ack" doc:id="564e2213-d43f-4cab-b54d-3485a4cc6f50" variableName="poAckJson"/>
+			<db:insert doc:name="Insert" doc:id="21be135e-32cd-41da-94fb-4936c9a45571" config-ref="Database_Config_Mythical">
+				<db:sql ><![CDATA[INSERT INTO 1p_b2b_mythical.INB_PURCHASE_ORDER_MASTER (PURCHASE_ORDER_NUMBER, 
+CUSTOMER_ID, MYTHICAL_LOB, PO_ACK_STATUS, TRANSMISSION_MODE, PO_BUSINESS_MSG, PO_ACK_BUSINESS_MSG) 
+VALUES (:PO_NUMBER, :CUSTOMER_ID, :MYTHICAL_LOB, :PO_ACK_STATUS, 
+:TRANSMISSION_MODE, :PO_BUSINESS_MSG, :PO_ACK_BUSINESS_MSG)]]></db:sql>
+				<db:input-parameters ><![CDATA[#[{
+        PO_NUMBER: payload.B2BMessage.B2BHeader.BusinessKey,
+        CUSTOMER_ID: payload.B2BMessage.B2BHeader.Receiver,
+        MYTHICAL_LOB: payload.B2BMessage.B2BHeader.Sender,
+        PO_ACK_STATUS: "ACK-SENT",
+        TRANSMISSION_MODE: "EDI",
+        PO_BUSINESS_MSG: vars.currentPOJson.^raw as String,
+        PO_ACK_BUSINESS_MSG: payload.^raw as String
+}]]]></db:input-parameters>
+			</db:insert>
+			<logger level="INFO" doc:name="Logger" doc:id="222f97dc-f0b3-44ae-b2e1-15a61ab1bda7" message="Saved PO and PO Ack to PO master table for #[vars.currentPOJson.PurchaseOrder.PONumber] from #[vars.currentPOJson.PurchaseOrder.CustomerName]"/>
+			<vm:publish doc:name="PO Ack JSON to outbound-po-ack.queue" doc:id="61c90a41-6e1a-492e-8cb1-d91440d8f174" config-ref="VM_Config" queueName="outbound-po-ack.q">
+				<vm:content ><![CDATA[#[vars.poAckJson]]]></vm:content>
+			</vm:publish>
+			<logger level="INFO" doc:name="Logger" doc:id="1316c016-b07e-42fe-a1e1-f8acdd549406" message="PO Ack published for Partner Manager"/>
+		</foreach>
+	</flow>
+	<flow name="apm-2.5.0-mythical-inbound-po-proc-apiFlow1" doc:id="567dbb57-0e04-4a69-bdb8-ccb02a897bdc" >
+		<vm:listener queueName="outbound-po-ack.q" doc:name="outbound-po-ack.queue" doc:id="b5bd0987-b853-4b95-84a1-2e6a163f0cd5" config-ref="VM_Config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="3442eca8-b008-457d-ba25-2adee74f2727" message="Sending PO Ack JSON to Partner Manager"/>
+		<http:request method="POST" doc:name="Send PO Ack JSON to Partner Manager" doc:id="9ec80a61-096f-4e1f-8c50-da90f9f5db5b" config-ref="HTTP_Request_Send_to_PartnerManager" path="${apm.outbound.path}" >
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+		</http:request>
+	</flow>
+</mule>

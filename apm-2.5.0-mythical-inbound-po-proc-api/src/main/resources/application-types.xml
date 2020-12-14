@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="mythical-ib-po-json" format="json">
+      <types:shape format="json-schema" location="enterprise-ib-po-json/Enterprise-Inbound-PO-schema.json"/>
+    </types:type>
+    <types:type name="mythical-ob-po-ack-json" format="json">
+      <types:shape format="json-schema" location="enterprise-ob-po-ack-json/enterprise-ob-po-ack-schema.json"/>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#55d16b60-d712-4f99-8aa0-ec27e7205029">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="mythical-ib-po-json"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#0bf0d109-93f9-4835-93bc-eaab80533594">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="mythical-ob-po-ack-json"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

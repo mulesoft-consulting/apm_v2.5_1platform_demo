@@ -1,0 +1,121 @@
+{
+  "B2BMessage": {
+    "B2BHeader": {
+      "MessageType": "POAck",
+      "BusinessKey": "PO68232732",
+      "CreatedDateTime": "2020-01-22T14:12:33.735+00:00",
+      "Sender": "Supplier",
+      "Receiver": "Salesforce"
+    },
+    "Data": {
+      "NetSuitePOAck": {
+        "POAckHeader": {
+          "CustomerId": "350",
+          "SenderId": "Supplier",
+          "ReceiverId": "Salesforce",
+          "DueDate": "2020-07-11"
+        },
+        "Shipment": {
+          "Orders": {
+            "Order": {
+              "OrderReferences": {
+                "RefType": "PONumber",
+                "RefValue": "PO68232732"
+              },
+              "Items": [
+                {
+                  "Item": {
+                    "ItemReference": [
+                      {
+                        "RefType": "POLineNumber",
+                        "RefValue": "1"
+                      },
+                      {
+                        "RefType": "ItemNumber",
+                        "RefValue": "324791"
+                      },
+                      {
+                        "RefType": "ShipQuantity",
+                        "RefValue": "200"
+                      },
+                      {
+                        "RefType": "QuantityUOM",
+                        "RefValue": "CT"
+                      }
+                    ],
+                    "Locations": [
+                      {
+                        "@role": "SHIP FROM",
+                        "LocationId": "65761T",
+                        "Address": {
+                          "AddressLine1": "6700 Auto Mall Pkwy",
+                          "City": "Fremont",
+                          "State": "CA",
+                          "PostalCode": "94538"
+                        }
+                      },
+                      {
+                        "@role": "SHIP TO",
+                        "LocationId": "00000954",
+                        "Address": {
+                          "AddressLine1": "415 Mission St",
+                          "City": "SAN FRANCISCO",
+                          "State": "CA",
+                          "PostalCode": "94105"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Item": {
+                    "ItemReference": [
+                      {
+                        "RefType": "POLineNumber",
+                        "RefValue": "2"
+                      },
+                      {
+                        "RefType": "ItemNumber",
+                        "RefValue": "2072174"
+                      },
+                      {
+                        "RefType": "ShipQuantity",
+                        "RefValue": "146"
+                      },
+                      {
+                        "RefType": "QuantityUOM",
+                        "RefValue": "CT"
+                      }
+                    ],
+                    "Locations": [
+                      {
+                        "@role": "SHIP FROM",
+                        "LocationId": "65761T",
+                        "Address": {
+                          "AddressLine1": "6700 Auto Mall Pkwy",
+                          "City": "Fremont",
+                          "State": "CA",
+                          "PostalCode": "94538"
+                        }
+                      },
+                      {
+                        "@role": "SHIP TO",
+                        "LocationId": "00000954",
+                        "Address": {
+                          "AddressLine1": "415 Mission St",
+                          "City": "SAN FRANCISCO",
+                          "State": "CA",
+                          "PostalCode": "94105"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
