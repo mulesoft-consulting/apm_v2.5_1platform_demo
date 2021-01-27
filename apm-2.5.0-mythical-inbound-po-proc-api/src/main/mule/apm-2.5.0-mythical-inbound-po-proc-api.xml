@@ -40,7 +40,6 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="c774b185-95f7-4ed4-a313-844ec97657b8" file="config/config-secure.yaml" key="${encryption.key}" >
 		<secure-properties:encrypt algorithm="Blowfish" />
 	</secure-properties:config>
-	<api-gateway:autodiscovery apiId="16600638" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="726441e9-9bdb-4c2f-86b5-30ca8deb90be" flowRef="apm-2.5.0-mythical-inbound-po-proc-apiFlow" />
 	<flow name="apm-2.5.0-mythical-inbound-po-proc-apiFlow" doc:id="66bc0410-4769-47a6-ba10-233b491fae37" >
 		<http:listener doc:name="/inbound-po-proc-api" doc:id="55d16b60-d712-4f99-8aa0-ec27e7205029" config-ref="HTTP_Listener_Mythical" path="/inbound-po-proc-api"/>
 		<logger level="INFO" doc:name="Logger" doc:id="8e46dcf2-38f1-4a2c-be25-76c9b67fdb52" message="Processing inbound purchase order"/>
