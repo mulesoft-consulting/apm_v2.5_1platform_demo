@@ -35,6 +35,10 @@
                             <groupId>mysql</groupId>
                             <artifactId>mysql-connector-java</artifactId>
                         </sharedLibrary>
+                    <sharedLibrary>
+                            <groupId>org.codehaus.groovy</groupId>
+                            <artifactId>groovy-all</artifactId>
+                        </sharedLibrary>
                     </sharedLibraries>
                 <classifier>mule-application</classifier>
                 </configuration>
@@ -77,6 +81,18 @@
             <artifactId>mule-secure-configuration-property-module</artifactId>
             <version>1.2.3</version>
             <classifier>mule-plugin</classifier>
+        </dependency>
+    	<dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-scripting-module</artifactId>
+            <version>2.0.0</version>
+            <classifier>mule-plugin</classifier>
+        </dependency>
+    	<dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.4.16</version>
+            <classifier>indy</classifier>
         </dependency>
     </dependencies>
 

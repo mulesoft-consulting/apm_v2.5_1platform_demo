@@ -3,3 +3,8 @@
 db:
    user: "![VYhX2zbK940HFoDEZr5oEg==]"
    password: "![GdvoF6rFHnciN8dfuGyIGBjeylQGTBJD8xo7Ups2DLU=]"
+   
+apm:
+   outbound:
+      user: "![ticOUTQZ7F/CqQT8hb4vuYI4NY3K1hXX]"
+      password: "![ticOUTQZ7F9fl4Rxnu18Gg==]"
