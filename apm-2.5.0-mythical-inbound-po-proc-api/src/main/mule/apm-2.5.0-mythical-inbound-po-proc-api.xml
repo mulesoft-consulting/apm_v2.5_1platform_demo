@@ -27,7 +27,7 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 				<tls:trust-store insecure="true" />
 			</tls:context>
 			<http:authentication >
-				<http:basic-authentication username="${apm.outbound.user}" password="${apm.outbound.password}" />
+				<http:basic-authentication username="${secure::apm.outbound.user}" password="${secure::apm.outbound.password}" />
 			</http:authentication>
 		</http:request-connection>
 	</http:request-config>
