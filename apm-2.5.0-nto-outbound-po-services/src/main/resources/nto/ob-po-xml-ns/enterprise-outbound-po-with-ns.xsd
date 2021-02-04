@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid Technologies Online Tools 1.0 (https://www.liquid-technologies.com) -->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://xmlns.mulesoft.com/enterpriseobjects/finance/purchaseorder/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="PurchaseOrder">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="POPurpose" type="xs:string" />
+        <xs:element name="POType" type="xs:string" />
+        <xs:element name="PONumber" type="xs:string" />
+        <xs:element name="VendorId" type="xs:unsignedInt" />
+        <xs:element name="VendorName" type="xs:string" />
+        <xs:element name="LineOfBusiness" type="xs:string" />
+        <xs:element name="BuyerName" type="xs:string" />
+        <xs:element name="BuyerEmailID" type="xs:string" />
+        <xs:element name="DeliverToName" type="xs:string" />
+        <xs:element name="DeliverToEmailID" type="xs:string" />
+        <xs:element name="Currency" type="xs:string" />
+        <xs:element name="PODate" type="xs:dateTime" />
+        <xs:element name="RevisionNum" type="xs:unsignedByte" />
+        <xs:element name="POLineItems">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="POLineItem">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="PurchaseOrderLineId" type="xs:unsignedInt" />
+                    <xs:element name="LineNum" type="xs:unsignedByte" />
+                    <xs:element name="UnitofMeasure" type="xs:string" />
+                    <xs:element name="Quantity" type="xs:unsignedByte" />
+                    <xs:element name="UnitPrice" type="xs:decimal" />
+                    <xs:element name="Amount" type="xs:decimal" />
+                    <xs:element name="ItemDescription" type="xs:string" />
+                    <xs:element name="VendorItemNum" type="xs:unsignedInt" />
+                    <xs:element name="CustItemNum" />
+                    <xs:element name="POLineLocation">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="LineLocationId" type="xs:unsignedInt" />
+                          <xs:element name="ShipToLocation">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="ShipToLocationCode" type="xs:unsignedShort" />
+                                <xs:element name="ShipToLocationName" type="xs:string" />
+                                <xs:element name="Address">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="AddressLine1" type="xs:string" />
+                                      <xs:element name="AddressLine2" type="xs:string" />
+                                      <xs:element name="City" type="xs:string" />
+                                      <xs:element name="PostalCode" type="xs:unsignedInt" />
+                                      <xs:element name="State" type="xs:string" />
+                                      <xs:element name="Country" type="xs:string" />
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

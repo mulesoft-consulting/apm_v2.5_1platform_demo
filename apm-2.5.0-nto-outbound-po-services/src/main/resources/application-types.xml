@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="outbound-po" format="xml">
+      <types:shape format="xml-schema" element="{http://xmlns.mulesoft.com/enterpriseobjects/finance/purchaseorder/}PurchaseOrder" location="nto/ob-po-xml-ns/enterprise-outbound-po-with-ns.xsd"/>
+    </types:type>
+    <types:type name="out-po-db-insert-params" format="json">
+      <types:shape format="weave" example="nto/ob-po-xml-ns/nto-ob-po-db-params.json"><![CDATA[%dw 2.0
+
+type out_po_db_insert_params = {|
+  PONumber: String, 
+  NTOLob: String, 
+  Supplier: String
+|} {"example": "{\\\"PONumber\\\":\\\"ABC123\\\",\\\"NTOLob\\\":\\\"NTO Corporate\\\",\\\"Supplier\\\":\\\"MYTHICAL SUPPLIER, LLC\\\"}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#1a27052e-a944-4aa7-9be4-074f577e47d6">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="outbound-po"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#e03edaca-6380-441e-909c-3e6f3d9b2445">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:variables>
+          <types:variable name="outPODBParams" type="out-po-db-insert-params"/>
+        </types:variables>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

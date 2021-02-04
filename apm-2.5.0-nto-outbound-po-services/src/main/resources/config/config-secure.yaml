@@ -1,0 +1,12 @@
+# Secure configuration properties
+
+# NTO DB connection
+db:
+   user: "![EcPBX5Nff92rvnnPD6L9mA==]"
+   password: "![X699QVGWA/hOViFOmtG6m8jywI5gepgm/jhJ6GNArHM=]"
+   
+# URL to send outbound PO XMLs to Partner Manager
+apm:
+   outbound:
+      user: "![ODwUqNBlGEn7yrl9W3t1+w==]"
+      password: "![VWQfWn8u5C6JsZUh6yWO8g==]"

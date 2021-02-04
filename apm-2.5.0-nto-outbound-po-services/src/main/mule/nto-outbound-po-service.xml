@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="e60dc972-f233-4341-9fc7-558b4161fa03" basePath="nto" >
+		<http:listener-connection protocol="HTTPS" host="0.0.0.0" port="${https.port}" >
+			<tls:context >
+				<tls:key-store type="jks" path="muletest-rootca.jks" alias="rootca" keyPassword="muletest" password="muletest" />
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="c342c4ac-6a1f-4f67-b4cd-18c5090bc9fa" file="config/config.properties" />
+	<db:config name="Database_Config_NTO" doc:name="Database Config" doc:id="15a621df-3ddf-40e7-b62a-7926673bae29" >
+		<db:my-sql-connection host="${db.host}" port="${db.port}" user="${secure::db.user}" password="${secure::db.password}" database="${db.instance}" />
+	</db:config>
+	<http:request-config name="HTTP_Request_Send_to_APM" doc:name="HTTP Request configuration" doc:id="f9fd75dc-f261-462e-b880-c01875a7fe20" basePath="${apm.outbound.basepath}">
+		<http:request-connection protocol="HTTPS" host="${apm.outbound.host}" port="${apm.outbound.port}">
+			<tls:context >
+				<tls:trust-store insecure="true" />
+			</tls:context>
+			<http:authentication >
+				<http:basic-authentication username="${secure::apm.outbound.user}" password="${secure::apm.outbound.password}" />
+			</http:authentication>
+		</http:request-connection>
+	</http:request-config>
+	<global-property doc:name="Global Property" doc:id="1c488707-fc46-4c51-8a55-ff71d89be66d" name="encryption.key" value="mulesoft_password" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="4fe5b22f-0d03-4a8c-a677-ee98e6e183df" file="config/config-secure.yaml" key="${encryption.key}" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<flow name="apm-2.5.0-nto-outbound-po-servicesFlow" doc:id="f1d1ddba-cfa8-4fb8-8319-fd64155bdf06" >
+		<http:listener doc:name="/outbound-po" doc:id="1a27052e-a944-4aa7-9be4-074f577e47d6" config-ref="HTTP_Listener_config" path="/outbound-po"/>
+		<logger level="INFO" doc:name="Logger" doc:id="15f61769-dc08-4d49-8932-10def1eed041" message="NTO: Sending outbound PO to Mythical"/>
+		<set-variable value="#[payload]" doc:name="poXML" doc:id="b5782934-3548-4bd8-97b2-ca2428a20379" variableName="poXML"/>
+		<ee:transform doc:name="DB Insert Params" doc:id="e03edaca-6380-441e-909c-3e6f3d9b2445" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="nto/ob-po-xml-ns/NTO_DB_Insert_Params.dwl" variableName="outPODBParams" />
+			</ee:variables>
+		</ee:transform>
+		<http:request method="POST" doc:name="Send PO XML to Partner Manager" doc:id="3ada70b9-ae8f-4ac3-ac31-61d9f1909c08" config-ref="HTTP_Request_Send_to_APM" path="${apm.outbound.path}">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Content-Type" : "application/xml"
+}]]]></http:headers>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="bfb65421-508f-48d3-bc14-cf44aea6a0a1" message="Inserting into PO Master database"/>
+		<db:insert doc:name="Insert" doc:id="892fbbb3-6e9d-4cd0-a91c-dfa1b664ed26" config-ref="Database_Config_NTO">
+			<db:sql ><![CDATA[INSERT INTO 1p_b2b_nto.OTB_PURCHASE_ORDER_MASTER (PURCHASE_ORDER_NUMBER, NTO_LOB, 
+SUPPLIER, PO_ACK_STATUS, TRANSMISSION_MODE, PO_BUSINESS_MSG) 
+VALUES (:PURCHASE_ORDER_NUMBER, :NTO_LOB, :SUPPLIER, :PO_ACK_STATUS, :TRANSMISSION_MODE, :PO_BUSINESS_MSG)]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+        PURCHASE_ORDER_NUMBER: vars.outPODBParams.PONumber,
+        NTO_LOB: vars.outPODBParams.NTOLob,
+        SUPPLIER: vars.outPODBParams.Supplier,
+        PO_ACK_STATUS: "WAITING",
+        TRANSMISSION_MODE: "EDI",
+        PO_BUSINESS_MSG: vars.poXML.^raw as String
+}]]]></db:input-parameters>
+		</db:insert>
+		<logger level="INFO" doc:name="Logger" doc:id="d4d9fa16-83d2-453a-a5a4-19b390a55016" message="Completed processing PO #[vars.outPODBParams.PONumber]"/>
+		<set-payload value="Successfully sent PO XML to Partner Manager" doc:name="Set Payload" doc:id="d04c67cb-4a41-4f4e-a8c6-132b4edda8ee" />
+	</flow>
+</mule>
