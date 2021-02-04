@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://xmlns.mulesoft.com/enterpriseobjects/v1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="B2BMessages">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" name="B2BMessage">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="B2BHeader">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="MessageType" type="xs:string" />
+                    <xs:element name="BusinessKey" type="xs:string" />
+                    <xs:element name="CreatedDateTime" type="xs:dateTime" />
+                    <xs:element name="Sender" type="xs:string" />
+                    <xs:element name="Receiver" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Data">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="NetSuitePOAck">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="POAckHeader">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="CustomerId" type="xs:unsignedShort" />
+                                <xs:element name="SenderId" type="xs:string" />
+                                <xs:element name="ReceiverId" type="xs:string" />
+                                <xs:element name="DueDate" type="xs:date" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="Shipment">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="Orders">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="Order">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element name="OrderReferences">
+                                              <xs:complexType>
+                                                <xs:sequence>
+                                                  <xs:element name="RefType" type="xs:string" />
+                                                  <xs:element name="RefValue" type="xs:string" />
+                                                </xs:sequence>
+                                              </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="Items">
+                                              <xs:complexType>
+                                                <xs:sequence>
+                                                  <xs:element maxOccurs="unbounded" name="Item">
+                                                    <xs:complexType>
+                                                      <xs:sequence>
+                                                        <xs:element name="ItemRefefences">
+                                                          <xs:complexType>
+                                                            <xs:sequence>
+                                                              <xs:element maxOccurs="unbounded" name="ItemReference">
+                                                                <xs:complexType>
+                                                                  <xs:sequence>
+                                                                    <xs:element name="RefType" type="xs:string" />
+                                                                    <xs:element name="RefValue" type="xs:string" />
+                                                                  </xs:sequence>
+                                                                </xs:complexType>
+                                                              </xs:element>
+                                                            </xs:sequence>
+                                                          </xs:complexType>
+                                                        </xs:element>
+                                                        <xs:element name="Locations">
+                                                          <xs:complexType>
+                                                            <xs:sequence>
+                                                              <xs:element maxOccurs="unbounded" name="Location">
+                                                                <xs:complexType>
+                                                                  <xs:sequence>
+                                                                    <xs:element name="LocationId" type="xs:string" />
+                                                                    <xs:element name="Address">
+                                                                      <xs:complexType>
+                                                                        <xs:sequence>
+                                                                          <xs:element name="AddressLine1" type="xs:string" />
+                                                                          <xs:element name="City" type="xs:string" />
+                                                                          <xs:element name="State" type="xs:string" />
+                                                                          <xs:element name="PostalCode" type="xs:unsignedInt" />
+                                                                        </xs:sequence>
+                                                                      </xs:complexType>
+                                                                    </xs:element>
+                                                                  </xs:sequence>
+                                                                  <xs:attribute name="role" type="xs:string" use="required" />
+                                                                </xs:complexType>
+                                                              </xs:element>
+                                                            </xs:sequence>
+                                                          </xs:complexType>
+                                                        </xs:element>
+                                                      </xs:sequence>
+                                                    </xs:complexType>
+                                                  </xs:element>
+                                                </xs:sequence>
+                                              </xs:complexType>
+                                            </xs:element>
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

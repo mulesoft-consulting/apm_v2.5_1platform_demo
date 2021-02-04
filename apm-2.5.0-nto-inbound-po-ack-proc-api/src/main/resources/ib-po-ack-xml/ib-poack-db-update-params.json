@@ -1,0 +1,7 @@
+ {
+ 		"poNumber": "PO123",
+        "ackReceiver": "NTO Corporate",
+        "ackSender": "MYTHICAL SUPPLIER, LLC",
+        "ackStatus": "ACK-RECEIVED",
+		"ackDttm": "2020-10-16 00:05:15.0"
+}

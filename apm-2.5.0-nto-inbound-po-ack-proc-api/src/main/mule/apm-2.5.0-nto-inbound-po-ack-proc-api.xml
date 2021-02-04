@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+	xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="bef173f1-604b-4dc8-8b7c-72cb3e3480e1" file="config/config.properties" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="3b31e937-395a-4fed-bee3-1647fe1db8ae" basePath="nto" >
+		<http:listener-connection protocol="HTTPS" host="0.0.0.0" port="${https.port}" >
+			<tls:context >
+				<tls:key-store type="jks" path="muletest-rootca.jks" alias="rootca" keyPassword="muletest" password="muletest" />
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="db937234-c827-4dfe-b2ff-5a0df98a592f" >
+		<db:my-sql-connection host="${db.host}" port="${db.port}" user="${secure::db.user}" password="${secure::db.password}" database="${db.instance}" />
+	</db:config>
+	<vm:config name="VM_Config_NTO" doc:name="VM Config" doc:id="61d10fd3-188f-4ceb-b8cf-88ec4d612890" >
+		<vm:queues >
+			<vm:queue queueName="ib-po-ack.q" queueType="PERSISTENT" />
+		</vm:queues>
+	</vm:config>
+	<global-property doc:name="Global Property" doc:id="35fbc9f8-5871-4144-8adc-494bc9b1a1bd" name="encryption.key" value="mulesoft_password" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="81f964f8-125a-4063-a365-a4fb85414d1c" file="config/config-secure.yaml" key="${encryption.key}" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<flow name="apm-2.5.0-nto-inbound-po-ack-proc-apiFlow" doc:id="dcd13309-0ac2-4fd5-93bb-ff9b66227c2a" >
+		<http:listener doc:name="ib-po-ack-proc-api" doc:id="991b7106-a04e-4181-85c0-e8a0b2411164" config-ref="HTTP_Listener_config" path="/ib-po-ack-proc-api"/>
+		<logger level="INFO" doc:name="Logger" doc:id="a6e4f686-53c5-4610-8837-9babede8cc95" message="Processing Inbound PO Ack: #[payload]"/>
+		<vm:publish doc:name="ib-po-ack.q" doc:id="4d8b7404-673a-4abe-931e-5d9e121bbc1f" config-ref="VM_Config_NTO" queueName="ib-po-ack.q"/>
+		<set-payload value="Published PO Ack message for processing" doc:name="Set Payload" doc:id="40c148c2-149c-4a02-8560-7a20b5e66ffb" />
+	</flow>
+	<flow name="apm-2.5.0-nto-inbound-po-ack-proc-apiFlow1" doc:id="1fb8ca78-6997-48b3-9edd-dca4675f7a1d" >
+		<vm:listener doc:name="ib-po-ack.q" doc:id="4d215f14-ea9f-434e-8623-2a75a32ff259" config-ref="VM_Config_NTO" queueName="ib-po-ack.q"/>
+		<foreach doc:name="For Each PO Ack" doc:id="aa9b0add-beb3-44a0-8734-f38953c35a53" collection="#[output application/xml
+ns ns0 http://xmlns.mulesoft.com/enterpriseobjects/v1
+--- 
+payload.ns0#B2BMessages]" >
+			<ee:transform doc:name="DB Update Params" doc:id="5fdba6d2-32ae-447b-8b5f-6d846ab3bf16" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="dbUpdParams" ><![CDATA[%dw 2.0
+output application/json
+ns ns0 http://xmlns.mulesoft.com/enterpriseobjects/v1
+---
+{
+	poNumber: payload.ns0#B2BMessage.ns0#B2BHeader.ns0#BusinessKey,
+	ackReceiver: payload.ns0#B2BMessage.ns0#Data.ns0#NetSuitePOAck.ns0#POAckHeader.ns0#ReceiverId,
+	ackSender: payload.ns0#B2BMessage.ns0#Data.ns0#NetSuitePOAck.ns0#POAckHeader.ns0#SenderId,
+	ackStatus: "ACK-RECEIVED",
+	ackDttm: now() as DateTime {format: "yyyy-MM-dd HH:mm:ss"}
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<db:update doc:name="PO Ack status" doc:id="9a010d8f-6289-48db-9ad6-a0f5b97d18c7" config-ref="Database_Config" >
+				<db:sql ><![CDATA[UPDATE 1p_b2b_nto.OTB_PURCHASE_ORDER_MASTER SET PO_ACK_STATUS = :ackStatus, PO_ACK_BUSINESS_MSG = :ackXML, PO_ACK_DTTM = CURRENT_TIMESTAMP
+WHERE PURCHASE_ORDER_NUMBER = :poNumber AND SUPPLIER = :ackSender AND NTO_LOB = :ackReceiver]]></db:sql>
+				<db:input-parameters ><![CDATA[#[{
+	ackStatus: vars.dbUpdParams.ackStatus,
+    ackXML: payload.^raw as String,
+    
+    poNumber: vars.dbUpdParams.poNumber,
+    ackSender: vars.dbUpdParams.ackSender,
+    ackReceiver: vars.dbUpdParams.ackReceiver
+}]]]></db:input-parameters>
+			</db:update>
+			<logger level="INFO" doc:name="Logger" doc:id="562de79b-4b71-4ac8-863e-df5bc19feb9d" message="Updated PO Ack status for #[vars.dbUpdParams.poNumber]" />
+		</foreach>
+		<logger level="INFO" doc:name="Logger" doc:id="06cd40da-7502-446b-9dd6-f32b5d3c244f" message="Completed updating PO Ack status"/>
+	</flow>
+</mule>

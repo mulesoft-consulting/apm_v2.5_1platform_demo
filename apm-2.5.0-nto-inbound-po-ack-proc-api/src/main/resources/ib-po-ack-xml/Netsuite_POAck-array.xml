@@ -1,0 +1,224 @@
+<B2BMessages xmlns="http://xmlns.mulesoft.com/enterpriseobjects/v1">
+	<B2BMessage>
+		<B2BHeader>
+			<MessageType>POAck</MessageType>
+			<BusinessKey>PO68232732</BusinessKey>
+			<CreatedDateTime>2020-01-22T08:12:33.735-06:00</CreatedDateTime>
+			<Sender>Supplier</Sender>
+			<Receiver>Salesforce</Receiver>
+		</B2BHeader>
+		<Data>
+			<NetSuitePOAck>
+				<POAckHeader>
+					<CustomerId>350</CustomerId>
+					<SenderId>Supplier</SenderId>
+					<ReceiverId>Salesforce</ReceiverId>
+					<DueDate>2020-07-11</DueDate>
+				</POAckHeader>
+				<Shipment>
+					<Orders>
+						<Order>
+							<OrderReferences>
+								<RefType>PONumber</RefType>
+								<RefValue>PO68232732</RefValue>
+							</OrderReferences>
+							<Items>
+								<Item>
+									<ItemRefefences>
+										<ItemReference>
+											<RefType>POLineNumber</RefType>
+											<RefValue>1</RefValue>
+										</ItemReference>
+										<ItemReference>
+											<RefType>ItemNumber</RefType>
+											<RefValue>R76238B</RefValue>
+										</ItemReference>
+										<ItemReference>
+											<RefType>ShipQuantity</RefType>
+											<RefValue>120</RefValue>
+										</ItemReference>
+										<ItemReference>
+											<RefType>QuantityUOM</RefType>
+											<RefValue>CT</RefValue>
+										</ItemReference>
+									</ItemRefefences>
+									<Locations>
+										<Location role="SHIP FROM">
+											<LocationId>65761T</LocationId>
+											<Address>
+												<AddressLine1>6700 Auto Mall Pkwy</AddressLine1>
+												<City>Fremont</City>
+												<State>CA</State>
+												<PostalCode>94538</PostalCode>
+											</Address>
+										</Location>
+										<Location role="SHIP TO">
+											<LocationId>00000954</LocationId>
+											<Address>
+												<AddressLine1>415 Mission St</AddressLine1>
+												<City>SAN FRANCISCO</City>
+												<State>CA</State>
+												<PostalCode>94105</PostalCode>
+											</Address>
+										</Location>
+									</Locations>
+								</Item>
+								<Item>
+									<ItemRefefences>
+										<ItemReference>
+											<RefType>POLineNumber</RefType>
+											<RefValue>2</RefValue>
+										</ItemReference>
+										<ItemReference>
+											<RefType>ItemNumber</RefType>
+											<RefValue>R76238B</RefValue>
+										</ItemReference>
+										<ItemReference>
+											<RefType>ShipQuantity</RefType>
+											<RefValue>156</RefValue>
+										</ItemReference>
+										<ItemReference>
+											<RefType>QuantityUOM</RefType>
+											<RefValue>CT</RefValue>
+										</ItemReference>
+									</ItemRefefences>
+									<Locations>
+										<Location role="SHIP FROM">
+											<LocationId>65761T</LocationId>
+											<Address>
+												<AddressLine1>6700 Auto Mall Pkwy</AddressLine1>
+												<City>Fremont</City>
+												<State>CA</State>
+												<PostalCode>94538</PostalCode>
+											</Address>
+										</Location>
+										<Location role="SHIP TO">
+											<LocationId>00000954</LocationId>
+											<Address>
+												<AddressLine1>415 Mission St</AddressLine1>
+												<City>SAN FRANCISCO</City>
+												<State>CA</State>
+												<PostalCode>94105</PostalCode>
+											</Address>
+										</Location>
+									</Locations>
+								</Item>
+							</Items>
+						</Order>
+					</Orders>
+				</Shipment>
+			</NetSuitePOAck>
+		</Data>
+	</B2BMessage>
+	<B2BMessage>
+		<B2BHeader>
+			<MessageType>POAck</MessageType>
+			<BusinessKey>PO68232732</BusinessKey>
+			<CreatedDateTime>2020-01-22T08:12:33.735-06:00</CreatedDateTime>
+			<Sender>Supplier</Sender>
+			<Receiver>Salesforce</Receiver>
+		</B2BHeader>
+		<Data>
+			<NetSuitePOAck>
+				<POAckHeader>
+					<CustomerId>350</CustomerId>
+					<SenderId>Supplier</SenderId>
+					<ReceiverId>Salesforce</ReceiverId>
+					<DueDate>2020-07-11</DueDate>
+				</POAckHeader>
+				<Shipment>
+					<Orders>
+						<Order>
+							<OrderReferences>
+								<RefType>PONumber</RefType>
+								<RefValue>PO68232732</RefValue>
+							</OrderReferences>
+							<Items>
+								<Item>
+									<ItemRefefences>
+										<ItemReference>
+											<RefType>POLineNumber</RefType>
+											<RefValue>1</RefValue>
+										</ItemReference>
+										<ItemReference>
+											<RefType>ItemNumber</RefType>
+											<RefValue>R76238B</RefValue>
+										</ItemReference>
+										<ItemReference>
+											<RefType>ShipQuantity</RefType>
+											<RefValue>120</RefValue>
+										</ItemReference>
+										<ItemReference>
+											<RefType>QuantityUOM</RefType>
+											<RefValue>CT</RefValue>
+										</ItemReference>
+									</ItemRefefences>
+									<Locations>
+										<Location role="SHIP FROM">
+											<LocationId>65761T</LocationId>
+											<Address>
+												<AddressLine1>6700 Auto Mall Pkwy</AddressLine1>
+												<City>Fremont</City>
+												<State>CA</State>
+												<PostalCode>94538</PostalCode>
+											</Address>
+										</Location>
+										<Location role="SHIP TO">
+											<LocationId>00000954</LocationId>
+											<Address>
+												<AddressLine1>415 Mission St</AddressLine1>
+												<City>SAN FRANCISCO</City>
+												<State>CA</State>
+												<PostalCode>94105</PostalCode>
+											</Address>
+										</Location>
+									</Locations>
+								</Item>
+								<Item>
+									<ItemRefefences>
+										<ItemReference>
+											<RefType>POLineNumber</RefType>
+											<RefValue>2</RefValue>
+										</ItemReference>
+										<ItemReference>
+											<RefType>ItemNumber</RefType>
+											<RefValue>R76238B</RefValue>
+										</ItemReference>
+										<ItemReference>
+											<RefType>ShipQuantity</RefType>
+											<RefValue>156</RefValue>
+										</ItemReference>
+										<ItemReference>
+											<RefType>QuantityUOM</RefType>
+											<RefValue>CT</RefValue>
+										</ItemReference>
+									</ItemRefefences>
+									<Locations>
+										<Location role="SHIP FROM">
+											<LocationId>65761T</LocationId>
+											<Address>
+												<AddressLine1>6700 Auto Mall Pkwy</AddressLine1>
+												<City>Fremont</City>
+												<State>CA</State>
+												<PostalCode>94538</PostalCode>
+											</Address>
+										</Location>
+										<Location role="SHIP TO">
+											<LocationId>00000954</LocationId>
+											<Address>
+												<AddressLine1>415 Mission St</AddressLine1>
+												<City>SAN FRANCISCO</City>
+												<State>CA</State>
+												<PostalCode>94105</PostalCode>
+											</Address>
+										</Location>
+									</Locations>
+								</Item>
+							</Items>
+						</Order>
+					</Orders>
+				</Shipment>
+			</NetSuitePOAck>
+		</Data>
+	</B2BMessage>
+</B2BMessages>

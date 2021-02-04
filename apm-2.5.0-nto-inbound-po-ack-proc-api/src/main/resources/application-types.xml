@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="ib-po-ack-array-xml" format="xml">
+      <types:shape format="xml-schema" element="{http://xmlns.mulesoft.com/enterpriseobjects/v1}B2BMessages" location="ib-po-ack-xml/netsuite-ib-po-ack-array.xsd"/>
+    </types:type>
+    <types:type name="ib-po-ack-xml" format="xml">
+      <types:shape format="xml-schema" element="{http://xmlns.mulesoft.com/enterpriseobjects/v1}B2BMessage" location="ib-po-ack-xml/netsuite-ib-po-ack.xsd"/>
+    </types:type>
+    <types:type name="poack-db-upd-params-json" format="json">
+      <types:shape format="weave" example="ib-po-ack-xml/ib-poack-db-update-params.json"><![CDATA[%dw 2.0
+
+type poack_db_upd_params_json = {|
+  poNumber: String, 
+  ackReceiver: String, 
+  ackSender: String, 
+  ackStatus: String, 
+  ackDttm: String
+|} {"example": "{\\\"poNumber\\\":\\\"PO123\\\",\\\"ackReceiver\\\":\\\"NTO Corporate\\\",\\\"ackSender\\\":\\\"MYTHICAL SUPPLIER, LLC\\\",\\\"ackStatus\\\":\\\"ACK-RECEIVED\\\",\\\"ackDttm\\\":\\\"2020-10-16 00:05:15.0\\\"}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#991b7106-a04e-4181-85c0-e8a0b2411164">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="ib-po-ack-array-xml"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#047836b0-0eb9-4e47-96c1-bf6a39878b2d">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="ib-po-ack-xml"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:variables>
+          <types:variable name="dbUpdParams" type="poack-db-upd-params-json"/>
+        </types:variables>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#4d215f14-ea9f-434e-8623-2a75a32ff259">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="ib-po-ack-array-xml"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>
