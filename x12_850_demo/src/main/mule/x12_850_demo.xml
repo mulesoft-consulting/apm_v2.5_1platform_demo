@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:x12="http://www.mulesoft.org/schema/mule/x12"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/x12 http://www.mulesoft.org/schema/mule/x12/current/mule-x12.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<x12:config name="X12_EDI_Config" doc:name="X12 EDI Config" doc:id="52a32450-71da-4d40-b250-6e35b5ecb24e" interchangeIdQualifierSelf="01" interchangeIdSelf="4156978307" groupIdSelf="4156978307" interchangeIdQualifierPartner="ZZ" interchangeIdPartner="CVS2" groupIdPartner="CVSE" requireUniqueInterchanges="false" generate999Acks="true">
+		<x12:schemas >
+			<x12:schema value="/x12/004010/850.esl" />
+		</x12:schemas>
+	</x12:config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="888dc597-8103-4dd2-b5ca-cfd5c6fdb42c" >
+		<file:connection >
+			<reconnection />
+		</file:connection>
+	</file:config>
+	<x12:config name="X12_EDI_Config1" doc:name="X12 EDI Config" doc:id="4e99e2f9-990a-4d62-90cc-d3a5877b7273" >
+		<x12:schemas >
+			<x12:schema value="my204.esl" />
+		</x12:schemas>
+	</x12:config>
+	<flow name="x12_demoFlow" doc:id="4a9b2298-b4e5-480e-8957-990622f4c767" >
+		<file:listener doc:id="8216ecb6-e16d-4686-9176-fb84c12b510e" directory="/Users/jvansant/Demos/B2B_Demo/x12-demos/x12-850-demo/x12a-in" moveToDirectory="/Users/jvansant/Demos/B2B_Demo/x12-demos/x12-850-demo/x12a-processed" doc:name="On New or Updated File" config-ref="File_Config">
+			<scheduling-strategy >
+				<fixed-frequency />
+			</scheduling-strategy>
+			<file:matcher filenamePattern="*.edi" />
+		</file:listener>
+		<x12:read doc:name="Read 850" doc:id="b096c8a3-01a3-4b18-ade7-abb05749d6c6" config-ref="X12_EDI_Config" />
+		<ee:transform doc:name="Transform 850 to JSON" doc:id="855087f0-09a3-4293-a95c-e089c549f78d">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	Transaction_Name: payload.TransactionSets.v004010."850".Name[0],
+	Sender_ID: payload.TransactionSets.v004010."850".Interchange.ISA06[0],
+	Receiver_ID: payload.TransactionSets.v004010."850".Interchange.ISA08[0],
+	PO_Type: payload.TransactionSets.v004010."850".Heading."020_BEG".BEG02[0],
+	PO_Number: payload.TransactionSets.v004010."850".Heading."020_BEG".BEG03[0],
+	PO_Date: payload.TransactionSets.v004010."850".Heading."020_BEG".BEG05[0],
+	Total_Transaction_Amount: payload.TransactionSets.v004010."850".Summary."010_CTT_Loop"."020_AMT".AMT02[0],
+	Buyer_Information: payload.TransactionSets.v004010."850".Heading."060_PER" map {
+		Name: $.PER02[0],
+		Communication_Number: $.PER04[0]
+	},
+	Tax_Information: payload.TransactionSets.v004010."850".Heading."070_TAX" map {
+		Tax_Identification_Number: $.TAX01[0],
+		Tax_Exempt_Code:  $.TAX12[0]
+	},
+	Terms_of_Sale: payload.TransactionSets.v004010."850".Heading."130_ITD" map {
+		Terms_Type_Code: $.ITD01[0],
+		Discount_Percent: $.ITD03[0],
+		Discount_Period: $.ITD05[0],
+		Net_Days: $.ITD07[0],
+		Terms_Description: $.ITD12[0]
+	},
+	Entity_Identification: payload.TransactionSets.v004010."850".Heading."310_N1_Loop" map {
+		Entity_Id_Code: $."310_N1".N101[0],
+		Entity_Name: $."310_N1".N102[0],
+		Entity_Id_Qualifier_Code: $."310_N1".N103[0],
+		Id: $."310_N1".N104[0],
+		Address: $."340_N4" map {
+			City: $.N401[0],
+			State: $.N402[0],
+			Postal_Code: $.N403[0],
+			Country: $.N404[0]
+		}
+	},
+	Details: payload.TransactionSets.v004010."850".Detail."010_PO1_Loop" map {
+		Item_Information: $."010_PO1" map {
+			Assigned_Identification: $.PO101[0],
+			Ordered_Quantity: $.PO102[0],
+			Unit_Code: $.PO103[0],
+			Unit_Price: $.PO104[0],
+			Buyers_Item_Number: $.PO107[0],
+			Vendors_Item_Number: $.PO109[0],
+			Product_Qualifier_Id: $.PO110[0],
+			Product_Id: $.PO111[0]	
+		},
+		Item_Measurements: $."049_MEA" map {
+			Measurement_Code: $.MEA01[0],
+			Measurement_Qualifier: $.MEA02[0],
+			Measurement_Value: $.MEA03[0],
+			Unit: $.MEA0401[0]
+		}
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log Successful inbound 850 read in" doc:id="99681f00-4ee6-4d95-b8fd-b4190101f795" message='#["\nSuccessfully read in an 850 doc\n\n"]'/>
+		<file:write doc:name="Write to output.json" doc:id="cffe4153-8b50-4d8d-b105-ad81012cb809" config-ref="File_Config" path="/Users/jvansant/Demos/B2B_Demo/x12-demos/x12-850-demo/x12a-out/output.json"/>
+	</flow>
+</mule>

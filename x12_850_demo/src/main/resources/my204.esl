@@ -1,0 +1,124 @@
+form: X12
+version: '004010'
+imports: [ '/x12/004010/basedefs.esl' ]
+id: '204'
+name: 'Motor Carrier Load Tender'
+class: 'SM'
+heading: 
+- { idRef: 'ST', position: '010', usage: M }
+- { idRef: 'B2', position: '020', usage: M }
+- { idRef: 'B2A', position: '030', usage: M }
+- { idRef: 'L11', position: '080', usage: O, count: 50 }
+- { idRef: 'G62', position: '090', usage: O }
+- { idRef: 'MS3', position: '100', usage: O }
+- { idRef: 'AT5', position: '110', usage: O, count: 6 }
+- { idRef: 'PLD', position: '120', usage: O }
+- { idRef: 'LH6', position: '125', usage: O, count: 6 }
+- { idRef: 'NTE', position: '130', usage: O, count: 10 }
+- groupId: '0100_Loop'
+  count: 5
+  usage: O
+  items: 
+  - { idRef: 'N1', position: '140', usage: O }
+  - { idRef: 'N2', position: '150', usage: O }
+  - { idRef: 'N3', position: '160', usage: O, count: 2 }
+  - { idRef: 'N4', position: '170', usage: O }
+  - { idRef: 'L11', position: '180', usage: O }
+  - { idRef: 'G61', position: '190', usage: O, count: 3 }
+- groupId: '0200_Loop'
+  count: 10
+  usage: O
+  items: 
+  - { idRef: 'N7', position: '200', usage: O }
+  - { idRef: 'N7A', position: '203', usage: O }
+  - { idRef: 'N7B', position: '205', usage: O }
+  - { idRef: 'MEA', position: '208', usage: O }
+  - { idRef: 'M7', position: '210', usage: O, count: 2 }
+detail: 
+- groupId: '0300_Loop'
+  count: 999
+  usage: M
+  items: 
+  - { idRef: 'S5', position: '010', usage: M }
+  - { idRef: 'L11', position: '020', usage: O, count: 50 }
+  - { idRef: 'G62', position: '030', usage: O, count: 2 }
+  - { idRef: 'AT8', position: '040', usage: O }
+  - { idRef: 'LAD', position: '050', usage: O, count: 999 }
+  - { idRef: 'AT5', position: '060', usage: O, count: 6 }
+  - { idRef: 'PLD', position: '063', usage: O }
+  - { idRef: 'NTE', position: '065', usage: O, count: 20 }
+  - groupId: '0310_Loop'
+    usage: O
+    items: 
+    - { idRef: 'N1', position: '070', usage: O }
+    - { idRef: 'N2', position: '080', usage: O }
+    - { idRef: 'N3', position: '090', usage: O, count: 2 }
+    - { idRef: 'N4', position: '100', usage: O }
+    - { idRef: 'G61', position: '120', usage: O, count: 3 }
+  - groupId: '0320_Loop'
+    count: 99
+    usage: O
+    items: 
+    - { idRef: 'L5', position: '130', usage: O }
+    - { idRef: 'AT8', position: '135', usage: O }
+    - groupId: '0325_Loop'
+      count: 99
+      usage: O
+      items: 
+      - { idRef: 'G61', position: '140', usage: O }
+      - { idRef: 'L11', position: '141', usage: O, count: 5 }
+      - { idRef: 'LH6', position: '142', usage: O, count: 6 }
+      - groupId: '0330_Loop'
+        count: 25
+        usage: O
+        items: 
+        - { idRef: 'LH1', position: '143', usage: O }
+        - { idRef: 'LH2', position: '144', usage: O, count: 4 }
+        - { idRef: 'LH3', position: '145', usage: O, count: 10 }
+        - { idRef: 'LFH', position: '146', usage: O, count: 20 }
+        - { idRef: 'LEP', position: '147', usage: O, count: 3 }
+        - { idRef: 'LH4', position: '148', usage: O }
+        - { idRef: 'LHT', position: '149', usage: O, count: 3 }
+  - groupId: '0350_Loop'
+    count: 999
+    usage: O
+    items: 
+    - { idRef: 'OID', position: '150', usage: O }
+    - { idRef: 'G62', position: '160', usage: O, count: 2 }
+    - { idRef: 'LAD', position: '180', usage: O, count: 999 }
+    - groupId: '0360_Loop'
+      count: 99
+      usage: O
+      items: 
+      - { idRef: 'L5', position: '190', usage: O }
+      - { idRef: 'AT8', position: '195', usage: O }
+      - groupId: '0365_Loop'
+        count: 99
+        usage: O
+        items: 
+        - { idRef: 'G61', position: '200', usage: O }
+        - { idRef: 'L11', position: '201', usage: O, count: 5 }
+        - { idRef: 'LH6', position: '202', usage: O, count: 6 }
+        - groupId: '0370_Loop'
+          count: 25
+          usage: O
+          items: 
+          - { idRef: 'LH1', position: '203', usage: O }
+          - { idRef: 'LH2', position: '204', usage: O, count: 4 }
+          - { idRef: 'LH3', position: '205', usage: O, count: 10 }
+          - { idRef: 'LFH', position: '206', usage: O, count: 20 }
+          - { idRef: 'LEP', position: '207', usage: O, count: 3 }
+          - { idRef: 'LH4', position: '208', usage: O }
+          - { idRef: 'LHT', position: '209', usage: O, count: 3 }
+  - groupId: '0380_Loop'
+    count: 10
+    usage: O
+    items: 
+    - { idRef: 'N7', position: '210', usage: O }
+    - { idRef: 'N7A', position: '220', usage: O }
+    - { idRef: 'N7B', position: '230', usage: O }
+    - { idRef: 'MEA', position: '240', usage: O }
+    - { idRef: 'M7', position: '250', usage: O, count: 2 }
+summary: 
+- { idRef: 'L3', position: '010', usage: O }
+- { idRef: 'SE', position: '020', usage: M }

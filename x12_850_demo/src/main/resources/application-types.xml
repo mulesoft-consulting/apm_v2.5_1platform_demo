@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="Json-850" format="json">
+      <types:shape format="weave" example="examples/output.json"><![CDATA[%dw 2.0
+
+type Json_850 = {|
+  Transaction_Name: String, 
+  Sender_ID: String, 
+  Receiver_ID: String, 
+  PO_Type: String, 
+  PO_Number: String, 
+  PO_Date: String, 
+  Total_Transaction_Amount: Null, 
+  Buyer_Information: Array<{|    Name: String,     Communication_Number: Null  |}>, 
+  Tax_Information: Null, 
+  Terms_of_Sale: Array<{|    Terms_Type_Code: String,     Discount_Percent: Number {"typeId": "int"},     Discount_Period: Number {"typeId": "int"},     Net_Days: Number {"typeId": "int"},     Terms_Description: Null  |}>, 
+  Entity_Identification: Array<{|    Entity_Id_Code: String,     Entity_Name: Null,     Entity_Id_Qualifier_Code: String,     Id: String,     Address: Array<{|      City: String,       State: String,       Postal_Code: String,       Country: Null    |}>
+  |}>, 
+  Details: Array<{|    Item_Information: Array<{|      Assigned_Identification: Null,       Ordered_Quantity: String,       Unit_Code: String,       Unit_Price: String,       Buyers_Item_Number: String,       Vendors_Item_Number: String,       Product_Qualifier_Id: String,       Product_Id: String    |}>, 
+    Item_Measurements: Null
+  |}>
+|} {"example": "{\"Transaction_Name\":\"Purchase Order\",\"Sender_ID\":\"CVS2\",\"Receiver_ID\":\"4156978307\",\"PO_Type\":\"SA\",\"PO_Number\":\"2551146\",\"PO_Date\":\"2009-08-25T00:00:00-06:00\",\"Total_Transaction_Amount\":null,\"Buyer_Information\":[{\"Name\":\"ELISA BEAN\",\"Communication_Number\":null}],\"Tax_Information\":null,\"Terms_of_Sale\":[{\"Terms_Type_Code\":\"01\",\"Discount_Percent\":2,\"Discount_Period\":25,\"Net_Days\":26,\"Terms_Description\":null}],\"Entity_Identification\":[{\"Entity_Id_Code\":\"ST\",\"Entity_Name\":null,\"Entity_Id_Qualifier_Code\":\"54\",\"Id\":\"I101\",\"Address\":[{\"City\":\"INDIANAPOLIS\",\"State\":\"IN\",\"Postal_Code\":\"46219\",\"Country\":null}]}],\"Details\":[{\"Item_Information\":[{\"Assigned_Identification\":null,\"Ordered_Quantity\":\" \",\"Unit_Code\":\"C\",\"Unit_Price\":\"]\",\"Buyers_Item_Number\":\"1\",\"Vendors_Item_Number\":\"0\",\"Product_Qualifier_Id\":\"P\",\"Product_Id\":\"1\"},{\"Assigned_Identification\":null,\"Ordered_Quantity\":\"\\u001e\",\"Unit_Code\":\"C\",\"Unit_Price\":\"\uFFFD\",\"Buyers_Item_Number\":\"1\",\"Vendors_Item_Number\":\"0\",\"Product_Qualifier_Id\":\"P\",\"Product_Id\":\"1\"},{\"Assigned_Identification\":null,\"Ordered_Quantity\":\"(\",\"Unit_Code\":\"C\",\"Unit_Price\":\"3\",\"Buyers_Item_Number\":\"1\",\"Vendors_Item_Number\":\"0\",\"Product_Qualifier_Id\":\"P\",\"Product_Id\":\"1\"},{\"Assigned_Identification\":null,\"Ordered_Quantity\":\"\\u001f\",\"Unit_Code\":\"C\",\"Unit_Price\":\"\uFFFD\",\"Buyers_Item_Number\":\"1\",\"Vendors_Item_Number\":\"0\",\"Product_Qualifier_Id\":\"P\",\"Product_Id\":\"1\"},{\"Assigned_Identification\":null,\"Ordered_Quantity\":\" \",\"Unit_Code\":\"C\",\"Unit_Price\":\"b\",\"Buyers_Item_Number\":\"1\",\"Vendors_Item_Number\":\"0\",\"Product_Qualifier_Id\":\"P\",\"Product_Id\":\"1\"},{\"Assigned_Identification\":null,\"Ordered_Quantity\":\"\\u001a\",\"Unit_Code\":\"C\",\"Unit_Price\":\"b\",\"Buyers_Item_Number\":\"1\",\"Vendors_Item_Number\":\"0\",\"Product_Qualifier_Id\":\"P\",\"Product_Id\":\"1\"},{\"Assigned_Identification\":null,\"Ordered_Quantity\":\"\\u0012\",\"Unit_Code\":\"C\",\"Unit_Price\":\"\\\\\",\"Buyers_Item_Number\":\"1\",\"Vendors_Item_Number\":\"0\",\"Product_Qualifier_Id\":\"P\",\"Product_Id\":\"1\"},{\"Assigned_Identification\":null,\"Ordered_Quantity\":\"-\",\"Unit_Code\":\"C\",\"Unit_Price\":\"T\",\"Buyers_Item_Number\":\"1\",\"Vendors_Item_Number\":\"1\",\"Product_Qualifier_Id\":\"P\",\"Product_Id\":\"1\"},{\"Assigned_Identification\":null,\"Ordered_Quantity\":\"4\",\"Unit_Code\":\"C\",\"Unit_Price\":\"b\",\"Buyers_Item_Number\":\"1\",\"Vendors_Item_Number\":null,\"Product_Qualifier_Id\":\"P\",\"Product_Id\":\"1\"},{\"Assigned_Identification\":null,\"Ordered_Quantity\":\"\\u001f\",\"Unit_Code\":\"C\",\"Unit_Price\":\"6\",\"Buyers_Item_Number\":\"1\",\"Vendors_Item_Number\":\"1\",\"Product_Qualifier_Id\":\"P\",\"Product_Id\":\"1\"},{\"Assigned_Identification\":null,\"Ordered_Quantity\":\"(\",\"Unit_Code\":\"C\",\"Unit_Price\":\"8\",\"Buyers_Item_Number\":\"1\",\"Vendors_Item_Number\":\"1\",\"Product_Qualifier_Id\":\"P\",\"Product_Id\":\"1\"},{\"Assigned_Identification\":null,\"Ordered_Quantity\":\"\\u0013\",\"Unit_Code\":\"C\",\"Unit_Price\":\"N\",\"Buyers_Item_Number\":\"1\",\"Vendors_Item_Number\":\"1\",\"Product_Qualifier_Id\":\"P\",\"Product_Id\":\"1\"}],\"Item_Measurements\":null}]}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#855087f0-09a3-4293-a95c-e089c549f78d">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="Json-850"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>
