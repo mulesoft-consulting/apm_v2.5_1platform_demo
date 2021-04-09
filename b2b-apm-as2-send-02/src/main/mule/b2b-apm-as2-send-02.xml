@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:as2-mule4="http://www.mulesoft.org/schema/mule/as2-mule4" xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/as2-mule4 http://www.mulesoft.org/schema/mule/as2-mule4/current/mule-as2-mule4.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="3d759b4b-b9d1-4b93-90b2-6b5484e71387" basePath="as2" >
+		<http:listener-connection host="0.0.0.0" port="${https.port}" protocol="HTTPS">
+			<tls:context >
+				<tls:key-store type="jks" path="muletest-rootca.jks" alias="rootca" keyPassword="muletest" password="muletest" />
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	<as2-mule4:send-config name="AS2_Connector_Send_config" doc:name="AS2 Connector Send config" doc:id="2aae2592-ca34-43fa-a19e-2ff4895cf9ef" >
+		<as2-mule4:connection partnerURL='#[attributes.headers."AS2-URL"]' >
+			<tls:context >
+				<tls:trust-store insecure="true" />
+			</tls:context>
+		</as2-mule4:connection>
+		<as2-mule4:self-config as2Name='#[attributes.headers."AS2-From"]' x509Alias='#[attributes.headers."AS2-From"]' email="support@sender.com" />
+		<as2-mule4:partner-config as2Name='#[attributes.headers."AS2-To"]' x509Alias='#[attributes.headers."AS2-To"]' email="support@partner.com" />
+		<as2-mule4:requester-config subject="EDI data" messageIntegrityCheckAlgorithm="SHA1" mdnMessageIntegrityCheckAlgorithm="SHA1" requestReceipt="SIGNED_REQUIRED" />
+		<as2-mule4:keystore-config keystorePassword="test" keystorePath='#[attributes.headers."AS2-From" ++ ".p12"]' privateKeyPassword="test" />
+	</as2-mule4:send-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="3e2df4df-0247-47e7-9af2-3b0b288410d8" file="app.properties" />
+	<flow name="b2b-apm-250-qax-as2-send-01Flow" doc:id="06b552ad-31be-41e2-a8c5-524b718bdf0b" >
+		<http:listener doc:name="Listener" doc:id="614248ee-0d57-4a36-aec2-cac130e315da" config-ref="HTTP_Listener_config" path="/send"/>
+		<logger level="INFO" doc:name="Logger" doc:id="82ddb32d-08a0-44a4-b26a-861a654403d6" message='Sending AS2 message to #[attributes.headers."AS2-To"]'/>
+		<as2-mule4:send-with-sync-mdn doc:name="Send with Sync MDN" doc:id="a2a62627-4baf-4bcb-bc13-de8647082d8e" config-ref="AS2_Connector_Send_config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="24a7c581-d959-459b-ba1d-b27f6298f7c5" message="Successfully sent AS2 message"/>
+		<set-payload value="Successfully sent AS2 message" doc:name="Set Payload" doc:id="abf5913a-0b0d-4ac3-8ce9-63378d7b1a1f" />
+	</flow>
+</mule>
